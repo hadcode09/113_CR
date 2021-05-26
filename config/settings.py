@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from environs import Env
+
+
+env = Env()
+env.read_env()
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5rxn=4(xda!57&!v60c(qyk%u*8*3$d4@k-b5z+u=@h)e@fkei'
+SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = []
 
@@ -45,7 +52,7 @@ INSTALLED_APPS = [
     #Local
     'accounts',
     'pages',
-    #'articles'
+    'articles'
 
     
     
@@ -55,6 +62,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -87,11 +95,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default': env.dj_db_url
+ #      'ENGINE': 'django.db.backends.sqlite3',
+ #       'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+
 
 
 # Password validation
@@ -131,6 +139,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
+STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -144,11 +155,11 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Email settings
-EMAIL_BACKEND='django.core.mail.backends.stmp.EmailBackend'
-DEFAULT_FROM_EMAIL= 'mark.hadley1@hotmail.com'
-EMAIL_HOST_USER='apikey'
-EMAIL_HOST_PASSWORD='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'
-EMAIL_POST=587
-EMAIL_USE_TLS=True
+EMAIL_BACKEND='django.core.mail.backends.constole.EmailBackend'
+DEFAULT_FROM_EMAIL= env.str("DEFAULT_FROM_EMAIL")
+EMAIL_HOST_USER= env.str("EMAIL_HOST")
+EMAIL_HOST_PASSWORD=env.str("EMAIL_HOST_PASSWORD")
+EMAIL_POST=env.int("EMAIL_POST")
+EMAIL_USE_TLS=env.bool("EMAIL_USE_TLS")
 
 TIME_ZONE = 'America/Tijuana'

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 
     # 3rd party:
@@ -95,7 +96,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': env.dj_db_url
+    'default': env.dj_db_url("DATABASE_URL")
  #      'ENGINE': 'django.db.backends.sqlite3',
  #       'NAME': BASE_DIR / 'db.sqlite3',
     }
@@ -155,11 +156,11 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Email settings
-EMAIL_BACKEND='django.core.mail.backends.constole.EmailBackend'
+EMAIL_BACKEND ='django.core.mail.backends.constole.EmailBackend'
 DEFAULT_FROM_EMAIL= env.str("DEFAULT_FROM_EMAIL")
-EMAIL_HOST_USER= env.str("EMAIL_HOST")
-EMAIL_HOST_PASSWORD=env.str("EMAIL_HOST_PASSWORD")
-EMAIL_POST=env.int("EMAIL_POST")
-EMAIL_USE_TLS=env.bool("EMAIL_USE_TLS")
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = env.int("EMAIL_PORT")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")
 
 TIME_ZONE = 'America/Tijuana'
